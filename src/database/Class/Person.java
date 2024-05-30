@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import java.lang.Error;
 
 import database.objects.PersonData;
+import database.objects.PersonAccount;
 import database.objects.Json;
 
 /**
@@ -161,5 +162,71 @@ public class Person {
         
         System.err.println("Usuario " + cedula + " No es valido o no cuenta con puntos fidelidad");
         return cedula.hashCode();
+    }
+    
+    public void createAccount(String idAccount, String email, String hash, String salt, String cedula) {
+        String status = "failed";
+        String sql = "INSERT INTO Cuenta (id_cuenta, correo, hash, salt, persona_cedula) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, idAccount);
+            ps.setString(2, email);
+            ps.setString(3, hash);
+            ps.setString(4, salt);
+            ps.setString(5, cedula);
+            ps.executeUpdate();
+            
+            status = "done";
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("Account creation: " + status);
+    }
+    
+    public void updateAccount(String email, Json[] newData) {
+        Json json = new Json();
+
+        String operation = "UPDATE Cuenta SET ";
+        String parameter = json.queryString(newData);
+        String condition = "WHERE correo = ?";
+        String sql = operation + parameter + condition; 
+        
+        String status = "failed";
+        
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.executeUpdate();
+            
+            status = "done";
+        } catch (SQLException ex) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("Account update: " + status);
+    }
+    
+    public  PersonAccount getAccount(String email) {
+        String sql = "SELECT * FROM Cuenta WHERE correo = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                return new PersonAccount(
+                    rs.getString("id_cuenta"),
+                    rs.getString("correo"),
+                    rs.getString("hash"),
+                    rs.getString("salt"),
+                    rs.getString("persona_cedula")
+                );
+            } else {
+                System.out.println("No se ha encontrado resultados");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return new PersonAccount();
     }
 }

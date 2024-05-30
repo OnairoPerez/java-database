@@ -6,7 +6,7 @@ USE `Tienda_Online`;
 CREATE TABLE IF NOT EXISTS `Persona` (
 `nombre` VARCHAR(50) NOT NULL,
 `apellido` VARCHAR(50) NOT NULL,
-`cedula` VARCHAR(15) NOT NULL,
+`cedula` VARCHAR(15) NOT NULL UNIQUE,
 `telefono` VARCHAR(15) NULL,
 `direccion` VARCHAR(150) NULL,
 `ciudad` VARCHAR(25) NULL,
@@ -14,11 +14,11 @@ PRIMARY KEY (`cedula`)
 );
 -- Creación de la tabla Cuenta
 CREATE TABLE IF NOT EXISTS `Cuenta` (
-`id_cuenta` INT NOT NULL AUTO_INCREMENT,
-`correo` VARCHAR(45) NOT NULL,
-`hash` VARCHAR(110) NOT NULL,
-`salt` VARCHAR(20) NOT NULL,
-`persona_cedula` VARCHAR(15) NOT NULL,
+`id_cuenta` VARCHAR(10) NOT NULL UNIQUE,
+`correo` VARCHAR(45) NOT NULL UNIQUE,
+`hash` VARCHAR(110) NOT NULL UNIQUE,
+`salt` VARCHAR(20) NOT NULL UNIQUE,
+`persona_cedula` VARCHAR(15) NOT NULL UNIQUE,
 PRIMARY KEY (`id_cuenta`),
 UNIQUE INDEX `correo_UNIQUE` (`correo` ASC) VISIBLE,
 INDEX `fk_Cuenta_Persona_idx` (`persona_cedula` ASC) VISIBLE,
