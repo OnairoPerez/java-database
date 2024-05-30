@@ -64,7 +64,7 @@ public class DataBase {
             System.out.println(person.getPoints("987654321"));
 
             //Crear cuenta (web)
-            person.createAccount("6ep9w8CtxP", "example@email.com", "3c6ac7d3473a1ada16da63e4430d08e385ff7c6f80432b12fc9931cd9ec0348d", "JT7nTqUuTI", "123456789");
+            person.createAccount("example@email.com", "3c6ac7d3473a1ada16da63e4430d08e385ff7c6f80432b12fc9931cd9ec0348d", "JT7nTqUuTI", "123456789");
             
             //Actualizar
             Json[] newAccountData = {

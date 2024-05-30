@@ -11,6 +11,7 @@ import java.lang.Error;
 
 import database.objects.PersonData;
 import database.objects.PersonAccount;
+import database.generate.Code;
 import database.objects.Json;
 
 /**
@@ -164,8 +165,12 @@ public class Person {
         return cedula.hashCode();
     }
     
-    public void createAccount(String idAccount, String email, String hash, String salt, String cedula) {
+    public void createAccount(String email, String hash, String salt, String cedula) {
         String status = "failed";
+        
+        Code code = new Code();
+        String idAccount = code.generate(10);
+        
         String sql = "INSERT INTO Cuenta (id_cuenta, correo, hash, salt, persona_cedula) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, idAccount);
