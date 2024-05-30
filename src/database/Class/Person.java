@@ -7,6 +7,7 @@ package database.Class;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.lang.Error;
 
 import database.objects.PersonData;
 import database.objects.Json;
@@ -57,6 +58,7 @@ public class Person {
             ps.executeUpdate();
             
             status = "done";
+            insertPoints(cedula);
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,5 +101,65 @@ public class Person {
         }
         
         System.out.println("Deleting information: " + status);
+    }
+    
+    private void insertPoints(String cedula) {
+        String status = "failed";
+        String sql = "INSERT INTO Fidelidad (persona_cedula, puntos) VALUES (?, 0)";
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, cedula);
+            ps.executeUpdate();
+            
+            status = "done";
+        } catch (SQLException ex) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("Initialize points: " + status);
+    }
+    
+    public void setPoints(String cedula, int points, String action) {
+        String status = "failed";
+        String sql = "UPDATE Fidelidad SET puntos = ? WHERE persona_cedula = ?";
+        
+        int userPoints = getPoints(cedula);
+        if(userPoints == cedula.hashCode()) {
+            return;
+        }
+        
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            if ("add".equals(action)) {
+                ps.setInt(1, points + userPoints);
+            } else if ("subtract".equals(action)) {
+                ps.setInt(1, userPoints - points);
+            }
+   
+            ps.setString(2, cedula);
+            ps.executeUpdate();
+
+            status = "done";
+        } catch (SQLException ex) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("Update points: " + status);
+    }
+    
+    public int getPoints(String cedula) {
+        String sql = "SELECT puntos FROM Fidelidad WHERE persona_cedula = ?";
+        try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, cedula);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("puntos");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.err.println("Usuario " + cedula + " No es valido o no cuenta con puntos fidelidad");
+        return cedula.hashCode();
     }
 }

@@ -54,9 +54,18 @@ public class DataBase {
                 new Json("ciudad", "Bogotá"),
             };
             person.updateInfo("123456789", jsonArray);
+            
+            //Actualizar puntos fidelida
+            person.setPoints("987654321", 200, "add");
+            System.out.println(person.getPoints("987654321"));
+            
+            //Restar puntos
+            person.setPoints("987654321", 100, "subtract");
+            System.out.println(person.getPoints("987654321"));
 
             //Eliminar datos
             person.deleteInfo("123456789");
+            person.deleteInfo("987654321");
             
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
