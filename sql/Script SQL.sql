@@ -74,32 +74,33 @@ ON UPDATE NO ACTION
 );
 -- Creación de la tabla FormaDePago
 CREATE TABLE IF NOT EXISTS `FormaDePago` (
-`id_FormaDePago` INT NOT NULL AUTO_INCREMENT,
-`pago` FLOAT NOT NULL,
-`cambio` FLOAT NOT NULL,
+`id_FormaDePago` TINYINT NOT NULL AUTO_INCREMENT,
 `metodo` VARCHAR(45) NOT NULL,
 PRIMARY KEY (`id_FormaDePago`)
 );
 -- Creación de la tabla Factura
 CREATE TABLE IF NOT EXISTS `Factura` (
-`id_factura` INT NOT NULL AUTO_INCREMENT,
+`id_factura` VARCHAR(37) NOT NULL UNIQUE,
 `fecha` DATE NOT NULL,
 `hora` TIME NOT NULL,
 `subtotal` FLOAT NOT NULL,
 `cedula` VARCHAR(15) NOT NULL,
-`formaDePago_id_FormaDePago` INT NOT NULL,
+`cambio` FLOAT NOT NULL,
+`pago` FLOAT NOT NULL,
+`metodo` TINYINT NOT NULL,
+
 PRIMARY KEY (`id_factura`),
 INDEX `fk_Factura_Persona_idx` (`cedula` ASC) VISIBLE,
-INDEX `fk_Factura_FormaDePago_idx` (`formaDePago_id_FormaDePago` ASC) VISIBLE,
+INDEX `fk_Factura_Metodo_idx` (`metodo` ASC) VISIBLE,
 CONSTRAINT `fk_Factura_Persona`
 FOREIGN KEY (`cedula`)
 REFERENCES `Persona` (`cedula`)
-ON DELETE NO ACTION
+ON DELETE RESTRICT
 ON UPDATE CASCADE,
-CONSTRAINT `fk_Factura_FormaDePago`
-FOREIGN KEY (`formaDePago_id_FormaDePago`)
+CONSTRAINT `fk_Factura_Metodo`
+FOREIGN KEY (`metodo`)
 REFERENCES `FormaDePago` (`id_FormaDePago`)
-ON DELETE CASCADE
+ON DELETE RESTRICT
 ON UPDATE CASCADE
 );
 -- Creación de la tabla ProductoXFactura
@@ -107,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `ProductoXFactura` (
 `valor_unitario` INT NOT NULL,
 `cantidad` INT NOT NULL,
 `monto_total` FLOAT NOT NULL,
-`factura_id_factura` INT NOT NULL,
+`factura_id_factura` VARCHAR(37) NOT NULL,
 `Productos_codigo` INT NOT NULL,
 INDEX `fk_ProductoXFactura_Factura_idx` (`factura_id_factura` ASC) VISIBLE,
 INDEX `fk_ProductoXFactura_Productos_idx` (`Productos_codigo` ASC) VISIBLE,

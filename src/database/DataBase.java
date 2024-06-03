@@ -76,10 +76,42 @@ public class DataBase {
             //Obtener datos
             PersonAccount accountdata = person.getAccount("example@email.com");
             System.out.println(accountdata.getPersonID());
-
-            //Eliminar datos
+            
+            //Factura
+            Invoice invoice = new Invoice(db.getConnection());
+            
+            //Métodos de pago
+            invoice.newMethod("Efectivo"); //Agregar un nuevo método
+            invoice.newMethod("Tarjeta de crédito"); //Agregar un nuevo método
+            
+            PaymentMethod[] methods = invoice.getAllMethods(); //Obtener todos lo métodos de pago
+            for (PaymentMethod item : methods) {
+                System.out.println("ID método: " + item.getID());
+                System.out.println("Nombre método: " + item.getMethod());
+            }
+            
+            invoice.insertInfo("987654321", "2024-05-31", "16:27:10", 20000, 5000, 15000, 1); //Nueva factura
+            
+            String uuid = invoice.uuidCode();  //Actualizar información de la factura
+            Json[] updateInvoice = {
+                new Json("fecha", "2024-06-03"),
+                new Json("hora", "15:22:10")
+            }; 
+            invoice.updateInfo(uuid, updateInvoice);
+            
+            InvoiceData invoiceData =  invoice.getInfo(uuid);
+            System.out.println("Invoice Data > Person ID: " + invoiceData.getPersonID() + "Invoice ID: " + invoiceData.getInvoiceID());
+            
+            invoice.deleteInfo(uuid); //Eliminar factura por su id
+            
+            //Eliminar métodos de pago
+            invoice.deleteMethod(1); 
+            invoice.deleteMethod(2); 
+            
+            //Eliminar datos Persona
             person.deleteInfo("123456789");
             person.deleteInfo("987654321");
+            
             
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);

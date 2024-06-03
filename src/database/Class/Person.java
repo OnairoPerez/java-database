@@ -7,7 +7,6 @@ package database.Class;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.Error;
 
 import database.objects.PersonData;
 import database.objects.PersonAccount;
