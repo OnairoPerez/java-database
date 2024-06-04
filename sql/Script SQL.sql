@@ -106,7 +106,6 @@ ON UPDATE CASCADE
 );
 -- Creación de la tabla ProductoXFactura
 CREATE TABLE IF NOT EXISTS `ProductoXFactura` (
-`valor_unitario` INT NOT NULL,
 `cantidad` INT NOT NULL,
 `monto_total` FLOAT NOT NULL,
 `factura_id_factura` VARCHAR(37) NOT NULL,
@@ -116,11 +115,11 @@ INDEX `fk_ProductoXFactura_Productos_idx` (`Productos_codigo` ASC) VISIBLE,
 CONSTRAINT `fk_ProductoXFactura_Factura`
 FOREIGN KEY (`factura_id_factura`)
 REFERENCES `Factura` (`id_factura`)
-ON DELETE CASCADE
+ON DELETE RESTRICT
 ON UPDATE CASCADE,
 CONSTRAINT `fk_ProductoXFactura_Productos`
 FOREIGN KEY (`Productos_codigo`)
 REFERENCES `Productos` (`codigo`)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON DELETE RESTRICT
+ON UPDATE CASCADE
 );

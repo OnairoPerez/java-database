@@ -132,7 +132,27 @@ public class DataBase {
                 System.out.println("Category ID: " + item.getBrandID());
                 System.out.println("Category Name: " + item.getName());
             }
+            
+            //Productos x factura
+            Billing billing = new Billing(db.getConnection());
+            
+            billing.addRecord(2, 4000, uuid, "7702175935066"); //Agregar un nuevo registro
+            
+            Json[] newDataRecord = {
+                new Json("cantidad", 3),
+                new Json("monto_total", 6000)
+            } ;
+            billing.updateRecord(uuid, "7702175935066", newDataRecord); //Actualizar información del registro
+            
+            BillingData[] billingData = billing.getRecords(uuid);
+            for (BillingData item : billingData) {
+                System.out.println("Producto > Cantidad: " + item.getQuantity());
+                System.out.println("Producto > Monto total: " + item.getTotalAmount());
+            }
 
+            //Eliminar registro de facturación
+            billing.deleteRecord(uuid, "7702175935066");
+            
             //Eliminar factura por su id
             invoice.deleteInfo(uuid);
             
@@ -152,8 +172,7 @@ public class DataBase {
             
             //Eliminar Marca
             product.deleteBrand(1);
-            
-            
+ 
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
