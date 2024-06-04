@@ -109,11 +109,11 @@ public class DataBase {
             
             product.newCategory("Condimentos y especias"); //Agregar una nueva Categoria
             product.newBrand("El Rey"); //Agregar una nueva marca de producto
-            product.insertInfo("7702175935066", "Condimento Completo Naturey", 35000, 38000, 30, 1, 1); //Agregar producto
+            product.insertInfo("7702175935066", "Condimento Completo Naturey", 1800, 2400, 30, 1, 1); //Agregar producto
             
             Json[] newProductData = {
-                new Json("valor_compra", 40000),
-                new Json("valor_venta", 42000)
+                new Json("valor_compra", 2000),
+                new Json("valor_venta", 2600)
             };
             product.updateInfo("7702175935066", newProductData); //Actualizar información de producto
             

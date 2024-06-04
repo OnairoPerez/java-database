@@ -101,6 +101,8 @@ public class Product {
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        System.out.println("Deletion of product information: " + status);
     }
     
     //Table Category
@@ -149,6 +151,8 @@ public class Product {
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        System.out.println("Updating category: " + status);
     }
     public ProductCategory[] getAllCategory() {
         String sql = "SELECT * FROM Categorias";
