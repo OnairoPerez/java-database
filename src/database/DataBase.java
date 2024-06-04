@@ -95,14 +95,46 @@ public class DataBase {
             String uuid = invoice.uuidCode();  //Actualizar información de la factura
             Json[] updateInvoice = {
                 new Json("fecha", "2024-06-03"),
-                new Json("hora", "15:22:10")
+                new Json("hora", "15:22:10"),
+                new Json("subtotal", 30000)
             }; 
             invoice.updateInfo(uuid, updateInvoice);
             
             InvoiceData invoiceData =  invoice.getInfo(uuid);
             System.out.println("Invoice Data > Person ID: " + invoiceData.getPersonID() + "Invoice ID: " + invoiceData.getInvoiceID());
+            System.out.println("Invoice Data > " + invoiceData.getSubtotal());
             
-            invoice.deleteInfo(uuid); //Eliminar factura por su id
+            //Producto
+            Product product = new Product(db.getConnection());
+            
+            product.newCategory("Condimentos y especias"); //Agregar una nueva Categoria
+            product.newBrand("El Rey"); //Agregar una nueva marca de producto
+            product.insertInfo("7702175935066", "Condimento Completo Naturey", 35000, 38000, 30, 1, 1); //Agregar producto
+            
+            Json[] newProductData = {
+                new Json("valor_compra", 40000),
+                new Json("valor_venta", 42000)
+            };
+            product.updateInfo("7702175935066", newProductData); //Actualizar información de producto
+            
+            ProductData productData = product.getInfo("7702175935066");
+            System.out.println("Product Information > Nombre: " + productData.getName());
+            System.out.println("Product Information > Precio de venta: " + productData.getSaleValue());
+            
+            ProductCategory[] productCategory = product.getAllCategory(); //Obtener todas la categorias
+            for (ProductCategory item : productCategory) {
+                System.out.println("Category ID: " + item.getCategoryID());
+                System.out.println("Category Name: " + item.getName());
+            }
+            
+            ProductBrands[] productBrands = product.getAllBrand(); //Obtener todas las marcas
+            for (ProductBrands item : productBrands) {
+                System.out.println("Category ID: " + item.getBrandID());
+                System.out.println("Category Name: " + item.getName());
+            }
+
+            //Eliminar factura por su id
+            invoice.deleteInfo(uuid);
             
             //Eliminar métodos de pago
             invoice.deleteMethod(1); 
@@ -111,6 +143,15 @@ public class DataBase {
             //Eliminar datos Persona
             person.deleteInfo("123456789");
             person.deleteInfo("987654321");
+            
+            //Eliminar Producto
+            product.deleteInfo("7702175935066");
+            
+            //Eliminar Categoria
+            product.deleteCategory(1);
+            
+            //Eliminar Marca
+            product.deleteBrand(1);
             
             
         } catch (SQLException ex) {

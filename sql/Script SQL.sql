@@ -15,7 +15,7 @@ PRIMARY KEY (`cedula`)
 -- Creación de la tabla Cuenta
 CREATE TABLE IF NOT EXISTS `Cuenta` (
 `id_cuenta` VARCHAR(10) NOT NULL UNIQUE,
-`correo` VARCHAR(45) NOT NULL UNIQUE,
+`correo` VARCHAR(45) NOT NULL,
 `hash` VARCHAR(110) NOT NULL UNIQUE,
 `salt` VARCHAR(20) NOT NULL UNIQUE,
 `persona_cedula` VARCHAR(15) NOT NULL UNIQUE,
@@ -41,17 +41,18 @@ ON UPDATE CASCADE
 -- Creación de la tabla Categorias
 CREATE TABLE IF NOT EXISTS `Categorias` (
 `id_categoria` TINYINT NOT NULL AUTO_INCREMENT,
-`nombre` VARCHAR(20) NOT NULL,
+`nombre` VARCHAR(45) NOT NULL,
 PRIMARY KEY (`id_categoria`)
 );
 -- Creación de la tabla Marca
 CREATE TABLE IF NOT EXISTS `Marca` (
-`id_Marca` TINYINT NOT NULL AUTO_INCREMENT,`nombre` VARCHAR(20) NOT NULL,
+`id_Marca` TINYINT NOT NULL AUTO_INCREMENT,
+`nombre` VARCHAR(45) NOT NULL,
 PRIMARY KEY (`id_Marca`)
 );
 -- Creación de la tabla Productos
 CREATE TABLE IF NOT EXISTS `Productos` (
-`codigo` INT NOT NULL,
+`codigo` VARCHAR(20) NOT NULL,
 `nombre` VARCHAR(45) NOT NULL,
 `valor_compra` FLOAT NOT NULL,
 `valor_venta` FLOAT NOT NULL,
@@ -65,12 +66,12 @@ CONSTRAINT `fk_Productos_Categorias`
 FOREIGN KEY (`Categorias_id_categoria`)
 REFERENCES `Categorias` (`id_categoria`)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION,
+ON UPDATE CASCADE,
 CONSTRAINT `fk_Productos_Marca`
 FOREIGN KEY (`Marca_id_Marca`)
 REFERENCES `Marca` (`id_Marca`)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON UPDATE CASCADE
 );
 -- Creación de la tabla FormaDePago
 CREATE TABLE IF NOT EXISTS `FormaDePago` (
@@ -109,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `ProductoXFactura` (
 `cantidad` INT NOT NULL,
 `monto_total` FLOAT NOT NULL,
 `factura_id_factura` VARCHAR(37) NOT NULL,
-`Productos_codigo` INT NOT NULL,
+`Productos_codigo` VARCHAR(20) NOT NULL,
 INDEX `fk_ProductoXFactura_Factura_idx` (`factura_id_factura` ASC) VISIBLE,
 INDEX `fk_ProductoXFactura_Productos_idx` (`Productos_codigo` ASC) VISIBLE,
 CONSTRAINT `fk_ProductoXFactura_Factura`

@@ -13,17 +13,27 @@ import java.util.Arrays;
 public class Json {
     private String key;
     private String value;
+    private int intValue;
 
     public Json() {}
     public Json(String key, String value) {
         this.key = key;
         this.value = value;
     }
+    public Json(String key, int value) {
+        this.key = key;
+        this.intValue = value;
+    }
+    
+    //Getters
     public String getKey() {
         return key;
     }
     public String getValue() {
         return value;
+    }
+    public int getIntValue() {
+        return intValue;
     }
     
     public String queryString(Json[] jsonArray) {
@@ -31,7 +41,11 @@ public class Json {
 
         for (int i = 0; i < jsonArray.length; i++) {
             Json json = jsonArray[i];
-            resultBuilder.append(json.getKey()).append(" = ").append("\"").append(json.getValue()).append("\"");
+            if (json.getValue() == null) {
+                resultBuilder.append(json.getKey()).append(" = ").append(json.getIntValue());
+            } else {
+                resultBuilder.append(json.getKey()).append(" = ").append("\"").append(json.getValue()).append("\"");
+            }
 
             if (i < jsonArray.length - 1) {
                 resultBuilder.append(", ");
